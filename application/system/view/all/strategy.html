@@ -1,0 +1,94 @@
+<style>
+    .image_div{
+        height: 200px;
+        width: 100%;
+        float: left;
+    }
+    .image_li{
+        float: left;
+        height: 200px;
+        width: 200px;
+        border: 1px solid #D0D0D0;
+        border-radius: 10px;
+    }
+    .image_li img{
+        float: left;
+        height: 200px;
+        width: 200px;
+        border-radius: 10px;
+    }
+    .image_ul{
+        float: left;
+    }
+    .image_add{
+        float: left;
+        height: 200px;
+        width: 200px;
+        border: 2px solid #0C0C0C;
+        border-radius: 10px;
+        margin-left: 20px;
+    }
+    .image_add img{
+        float: left;
+        height: 100px;
+        width: 100px;
+        margin: 50px 50px;
+    }
+    .image_div_title{
+        float: left;
+        width: 100%;
+        margin-top: 10px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">攻略</label>
+            <div class="layui-input-inline" style="width: 500px">
+                <textarea name="strategy" id="content" placeholder="请输入内容" class="layui-textarea">{$list.strategy}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab-item layui-form">
+        <div class="layui-form-item" id="authShow"></div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" class="field-id" name="id">
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
+            <a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            <div style="display:none;" id="formBtn"></div>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+<script>
+    layui.use(['jquery', 'laydate', 'upload'], function() {
+        var $ = layui.jquery, laydate = layui.laydate, layer = layui.layer, upload = layui.upload;
+
+        //日期时间选择器
+        laydate.render({
+            elem: '#test5'
+            ,type: 'datetime'
+        });
+
+        upload.render({
+            elem: '.upload-image',
+            url: '{:url("system/annex/upload?thumb=no&water=no")}'
+            , method: 'post'
+            , before: function (input) {
+                layer.msg('文件上传中...', {time: 3000000});
+            }, done: function (res, index, upload) {
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                $("#image").show();
+                $("#image input").val(res.data.file);
+                $("#image img").attr("src",res.data.file);
+            }
+        });
+    });
+</script>
+{:editor(['content'])}

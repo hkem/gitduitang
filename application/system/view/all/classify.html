@@ -1,0 +1,70 @@
+<style>
+    .image_list{
+        width: 100px;
+        height: 100px;
+    }
+    .image_list img{
+        width: 100px;
+        height: 100px;
+    }
+</style>
+<div class="layui-btn-container">
+    <a href="{:url('system/All/classify_add')}">
+        <button class="layui-btn layui-btn-normal" lay-event="getCheckData">添加</button>
+    </a>
+
+</div>
+<table id="dataTable"></table>
+{include file="block/layui" /}
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" {{ d.status == 1 ? 'checked' : '' }} {{ d.system == 1 ? 'disabled' : '' }} data-href="{:url('status')}?id={{ d.id }}">
+</script>
+<script type="text/html" id="image">
+    {{# if(d.image != ''){ }}
+    <div class="image_list">
+        <img src="{{ d.image }}">
+    </div>
+    {{# } }}
+</script>
+<script type="text/html" id="sort">
+    <input type="text" value="{{ d.sort }}" class="layui-input hisi-ajax-input" data-href="{:url('system/All/classify_sort')}?id={{ d.id }}" />
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+
+    <a href="{:url('system/All/classify_edit')}?id={{ d.id }}" class="layui-btn layui-btn-normal" title="修改" hisi-data="{width: '470px', height: '300px'}">修改</a>
+    <a href="{:url('system/All/classify_delete')}?id={{ d.id }}" class="layui-btn layui-btn-danger j-tr-del">删除</a>
+
+</script>
+<script type="text/javascript">
+    layui.use(['table'], function() {
+        var table = layui.table;
+        table.render({
+            elem: '#dataTable'
+            ,url: '{:url()}' //数据接口
+            ,page: true //开启分页
+            ,skin: 'row'
+            ,even: true
+            ,limit: 20
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                {type:'checkbox'}
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'image', title: '图片',templet:"#image"}
+                ,{field: 'name', title: '名称',templet:function (d) {
+                    if(d.type == 2){
+                            return "————"+d.name;
+                        }
+                        if(d.type == 3){
+                            return "————————"+d.name;
+                        }
+                        return d.name;
+                    }}
+                ,{field: 'sort', title: '排序',templet:"#sort"}
+                ,{field: 'ctime', title: '时间'}
+                ,{title: '操作', width: 220, templet: '#buttonTpl'}
+            ]]
+        });
+    });
+</script>

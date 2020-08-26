@@ -1,0 +1,76 @@
+<style>
+    .listnr{
+        margin-top: 10px;
+    }
+    .imggs{
+        width: 200px;
+        height: 200px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片：</label>
+            <div class="layui-input-inline" style="width: 500px">
+                <div class="listnr">
+                    <img class="imggs" src="{$list.image}">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布用户：</label>
+            <div class="layui-input-inline" style="width: 500px">
+                <div class="listnr">{$list.nickname}</div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题：</label>
+            <div class="layui-input-inline" style="width: 500px">
+                <div class="listnr">{$list.name}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容：</label>
+            <div class="layui-input-inline" style="width: 500px">
+                <div class="listnr">{$list.centre|raw}</div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab-item layui-form">
+        <div class="layui-form-item" id="authShow"></div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" value="{$list.id}" class="field-id" name="id">
+            {eq name="$list.state" value="0"}
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">审核通过</button>
+            {/eq}
+            <a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            <div style="display:none;" id="formBtn"></div>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+<script>
+    layui.use(['jquery', 'laydate', 'upload'], function() {
+        var $ = layui.jquery, laydate = layui.laydate, layer = layui.layer, upload = layui.upload;
+        upload.render({
+            elem: '.upload-image',
+            url: '{:url("system/annex/upload?thumb=no&water=no")}'
+            , method: 'post'
+            , before: function (input) {
+                layer.msg('文件上传中...', {time: 3000000});
+            }, done: function (res, index, upload) {
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                $("#image").show();
+                $("#image input").val(res.data.file);
+                $("#image img").attr("src",res.data.file);
+            }
+        });
+    });
+</script>
