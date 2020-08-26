@@ -30,6 +30,7 @@ use think\cache\driver\Memcached;
 use think\cache\driver\Redis;
 use think\Controller;
 use think\Db;
+use think\facade\Config;
 use think\facade\Validate;
 use think\session\driver\Memcache;
 
@@ -1354,7 +1355,7 @@ class Index extends Controller
         //理由缓存
         try{
             $memcache = new \think\cache\driver\Memcache();             //创建一个memcache对象
-            $memcache->connect('localhost', 11211) or json(["code" => -1, "msg" => "稍后再试", "data" => []]);; //连接Memcached服务器
+            $memcache->connect(Config::get("Memcache_hostname"), Config::get("Memcache_hostport")) or json(["code" => -1, "msg" => "稍后再试", "data" => []]);; //连接Memcached服务器
         }catch (\Exception $e){
             return json(["code" => -1, "msg" => "稍后再试", "data" => []]);
         }

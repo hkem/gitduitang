@@ -17,6 +17,7 @@ use app\api\model\Shopclassify;
 use app\api\model\User;
 use app\api\model\UserToken;
 use think\Controller;
+use think\facade\Config;
 
 class ApiCommon extends Controller
 {
@@ -59,7 +60,7 @@ class ApiCommon extends Controller
     }
 
     public static function image_url($val){
-        return str_replace("\\",'/',"http://localhost:8087".$val);
+        return str_replace("\\",'/',Config::get("Image_url").$val);
     }
 
     //获取页数
